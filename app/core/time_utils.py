@@ -26,5 +26,10 @@ def format_kst(dt):
 
 def seconds_until(target):
     """현재 시각부터 target까지 남은 시간을 초 단위로 반환합니다."""
-    now = datetime.now()
+    if target.tzinfo is not None and target.tzinfo.utcoffset(target) is not None:
+        # target이 timezone-aware인 경우, now도 같은 timezone으로 생성
+        now = datetime.now(target.tzinfo)
+    else:
+        # target이 naive인 경우, now도 naive로 생성
+        now = datetime.now()
     return int((target - now).total_seconds())
